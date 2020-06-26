@@ -8,6 +8,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <chrono>
 
 #include <ParallelTree.hpp>
 
@@ -133,15 +134,20 @@ int main()
     ExampleRecord initialRecord;
     // Корень дерева вариантов.
     unique_ptr<ExampleNode> root = make_unique<ExampleNode>();
+    auto startTime = chrono::high_resolution_clock::now();
     // Параллельно находим решение
     unique_ptr<Record> bestSolution = parallelTree(move(root), initialRecord);
     const ExampleRecord* bestSolutionCast = reinterpret_cast<const ExampleRecord*>(bestSolution.get());
+    auto finishTime = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(finishTime - startTime);
     
     cout << "x0 = " << bestSolutionCast->x[0] << ",  "
          << "x1 = " << bestSolutionCast->x[1] << ",  "
          << "x2 = " << bestSolutionCast->x[2] << ",  "
          << "x2 = " << bestSolutionCast->x[3] << ",  "
          << endl;
+
+    cout << "finished in " << duration.count() << " microseconds" << endl;
     
     return 0;
 }

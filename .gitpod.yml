@@ -1,3 +1,8 @@
 tasks:
   - init: 'echo "TODO: Replace with init/build command"'
     command: 'echo "TODO: Replace with command to start project"'
+
+vscode:
+  extensions:
+    - llvm-vs-code-extensions.vscode-clangd@0.1.5:VVxg4kW5VbJUP3ysCuG3Fg==
+    - genuitecllc.codetogether@1.2.0:uY0tviLJ9FyKMaoK7iNQCw==

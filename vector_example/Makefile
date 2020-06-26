@@ -2,7 +2,7 @@
 PT_PATH  = ../lib/Linux_x86_64
 
 CXX      = g++
-CXXFLAGS = -O2
+CXXFLAGS = -O2 -fopenmp
 LIBS     = -L$(PT_PATH) -lParallelTree -Wl,-rpath=$(PT_PATH)
 INCLUDE  = -I ../include
 OUT_NAME = example

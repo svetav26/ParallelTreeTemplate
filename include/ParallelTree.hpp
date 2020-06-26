@@ -1,57 +1,52 @@
 #ifndef PARALLELTREE_HPP
 #define PARALLELTREE_HPP
 
-#include <algorithm>
-#include <list>
 #include <memory>
 #include <vector>
-#include <omp.h>
 
-class Node {};
-
-class Result
+/// Рекорд
+class Record
 {
 public:
     /**
      * @brief Должен возвращать true, если данный рекорд лучше (меньше в задачах
      *        минимизации и больше в задачах максимизации), чем @p other
      */
-    virtual bool betterThan(const Result& other) = 0;
+    virtual bool betterThan(const Record& other) const = 0;
     
     /**
-     * @brief Должен возвращать копию данного объекта.
+     * @brief Должен возвращать копию данного рекорда.
      */
-    virtual std::unique_ptr<Result> clone() = 0;
-    
-    virtual Result& operator= (const Result& other) = 0;
+    virtual std::unique_ptr<Record> clone() const = 0;
 };
 
-class Params {};
+/// Узел дерева вариантов
+class Node
+{
+public:
+    /**
+     * @brief Функция, которая обрабатывает текущий узел и возвращает вектор
+     *        потомков этого узла (или пустой вектор, если потомков нет).
+     * 
+     * Она не должна менять глобальных переменных, т.к. она будет исполняться
+     * в нескольких потоках. Рекорд менять можно (при этом синхронизация не
+     * требуется).
+     */
+    virtual std::vector< std::unique_ptr<Node> > process(Record& record) = 0;
+    
+    /**
+     * @brief Возвращает true, если приоритет данного задания больше, чем other.
+     *        Задания с большим приоритетом будут обрабатываться раньше.
+     */
+    virtual bool hasHigherPriority(const Node& other) const = 0;
+};
 
 /**
  * @brief Обработка дерева и получение результата.
- * @param processNode Функция, которая принимает текущий узел, ссылку на
- *        результат, и возвращает вектор потомков этого узла (или пустой
- *        вектор, если потомков нет). Эта функция должна сама обеспечивать
- *        потокобезопасность изменения результата.
- * @param node Корень дерева.
- * @param result Результат. Потокобезопасность изменения результата должна
- *        обеспечить сама функция processNode
- * @param params Дополнительные параметры древовидного алгоритма. Если ему не
- *        нужны дополнительные параметры, то можно указать nullptr.
- * @param higherPriority Функция, которая сравнивает два задания, и возвращает
- *        true, если приоритет левого задания больше, чем правого. Если
- *        higherPriority != nullptr, то задания с большим приоритетом будут
- *        обрабатываться раньше. Если же higherPriority == nullptr, то задания
- *        будут обрабатываться примерно в том порядке, в котором их возвращает
- *        @p processNode.
+ * @param root Корень дерева вариантов.
+ * @param initialRecord Начальное значение рекорда.
+ * @return Лучший найденный рекорд.
  */
-void parallelTree(
-    std::vector<std::unique_ptr<Node>> (*processNode)(std::unique_ptr<Node>,
-                                                      Result&, const Params*),
-    std::unique_ptr<Node> node, Result& result, const Params* params = nullptr,
-    bool (*higherPriority)(const std::unique_ptr<Node>& n1,
-                           const std::unique_ptr<Node>& n2,
-                           const Params* params) = nullptr);
+std::unique_ptr<Record> parallelTree(std::unique_ptr<Node> root, const Record& initialRecord);
 
 #endif // PARALLELTREE_HPP

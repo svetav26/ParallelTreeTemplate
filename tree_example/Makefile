@@ -1,7 +1,10 @@
+# Путь можно заменить на ../lib/Linux_x86 для 32-битного linux.
+PT_PATH  = ../lib/Linux_x86_64
+
 CXX      = g++
-CXXFLAGS = -O2
-LIBS     = 
-INCLUDE  = 
+CXXFLAGS = -O2 -fopenmp
+LIBS     = -L$(PT_PATH) -lParallelTree -Wl,-rpath=$(PT_PATH)
+INCLUDE  = -I ../include
 OUT_NAME = example
 FILES    = main.cpp
 

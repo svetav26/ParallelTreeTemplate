@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <cstdint>
 
 /// Рекорд
 class Record
@@ -45,8 +46,14 @@ public:
  * @brief Обработка дерева и получение результата.
  * @param root Корень дерева вариантов.
  * @param initialRecord Начальное значение рекорда.
+ * @param threads Количество потоков. Если threads=0, то используется число
+ *                потоков, равное количеству ядер.
  * @return Лучший найденный рекорд.
  */
-std::unique_ptr<Record> parallelTree(std::unique_ptr<Node> root, const Record& initialRecord);
+std::unique_ptr<Record> parallelTree(
+    std::unique_ptr<Node> root,
+    const Record& initialRecord,
+    uint32_t threads=0
+);
 
 #endif // PARALLELTREE_HPP

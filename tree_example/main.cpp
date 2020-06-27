@@ -118,7 +118,7 @@ int main()
     unique_ptr<ExampleNode> root = make_unique<ExampleNode>(16);
     auto startTime = chrono::high_resolution_clock::now();
     // Параллельно находим решение
-    unique_ptr<Record> bestSolution = parallelTree(move(root), initialRecord);
+    unique_ptr<Record> bestSolution = parallelTree(move(root), initialRecord, 16);
     const ExampleRecord* bestSolutionCast = reinterpret_cast<const ExampleRecord*>(bestSolution.get());
     auto finishTime = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>(finishTime - startTime);

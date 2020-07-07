@@ -89,7 +89,7 @@ public:
         // Потомки
         std::vector< std::unique_ptr<Node> > childNodes;
 
-        if (x > 0) {
+        if (x > 1) {
             childNodes.emplace_back(new ExampleNode(x - 1));    
             childNodes.emplace_back(new ExampleNode(x - 1));    
         }

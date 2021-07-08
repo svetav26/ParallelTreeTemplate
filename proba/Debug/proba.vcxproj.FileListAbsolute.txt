@@ -1,0 +1,2 @@
+C:\Users\USER\source\repos\proba\Debug\proba.exe
+C:\Users\USER\source\repos\proba\Debug\proba.pdb
